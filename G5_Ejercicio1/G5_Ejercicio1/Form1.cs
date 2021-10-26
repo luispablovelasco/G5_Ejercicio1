@@ -22,6 +22,7 @@ namespace G5_Ejercicio1
             //Borra los mensajes para que no se muestren y pueda limpiar
             errorProvider1.SetError(txtnombre, "");
             errorProvider1.SetError(txtapellido, "");
+            errorProvider1.SetError(dtpFechaNacimiento, "");
         }
 
         private bool validarcampos()
@@ -56,30 +57,45 @@ namespace G5_Ejercicio1
             //limpia cualquier mensaje de error de alguna corrida previa
             BorrarMensaje();
 
-            //  Llamamos al metodo para validar campos, el de nombre y apellido
-            if (validarcampos())
-            {
-                MessageBox.Show("Los datos se ingresaron correctamente");
-            }
-
             //Verificamos la fecha de nacimiento que nos den 
             //DateTimePicker se llama dtpFechaNaciemiento
             DateTime fechaNacimiento = dtpFechaNacimiento.Value;
 
-            //Verificamos la fecha del sistema (Solo calculamos los años)
-            int años = System.DateTime.Now.Year - fechaNacimiento.Year;
-
-            //Verificamos aparte del año si ya pasamos la fecha de nacimiento de este año o nos faltan días
-            if (System.DateTime.Now.Subtract(fechaNacimiento.AddYears(años)).TotalDays < 0)
+            if (fechaNacimiento.Date > DateTime.Now.Date)
             {
-                //Si nos faltan días para cumplir años, al calculo le resta uno
-                txtedad.Text = Convert.ToString(años - 1);
+                errorProvider1.SetError(dtpFechaNacimiento, "Esta fecha es del futuro");
+
             }
             else
             {
-                //Si ya pasó nuestra fecha de naciemiento manda el valor correspondiente
-                txtedad.Text = Convert.ToString(años);
+                //  Llamamos al metodo para validar campos, el de nombre y apellido
+                if (validarcampos())
+                {
+                    MessageBox.Show("Los datos se ingresaron correctamente");
+                }
+
+
+
+                //Verificamos la fecha del sistema (Solo calculamos los años)
+                int años = System.DateTime.Now.Year - fechaNacimiento.Year;
+
+                //Verificamos aparte del año si ya pasamos la fecha de nacimiento de este año o nos faltan días
+                if (System.DateTime.Now.Subtract(fechaNacimiento.AddYears(años)).TotalDays < 0)
+                {
+                    //Si nos faltan días para cumplir años, al calculo le resta uno
+                    txtedad.Text = Convert.ToString(años - 1);
+                }
+                else
+                {
+                    //Si ya pasó nuestra fecha de naciemiento manda el valor correspondiente
+                    txtedad.Text = Convert.ToString(años);
+                }
             }
+            
+        }
+
+        private void dtpFechaNacimiento_Leave(object sender, EventArgs e)
+        {
         }
     }
 }
